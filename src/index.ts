@@ -7,9 +7,10 @@ const port = process.env.PORT || 8080;
 
 app.get('/', (req: Request, res: Response) => {
   logger.info('Received request to root endpoint', {
-    path: req.path,
-    method: req.method,
-    ip: req.ip,
+    httpRequest: {
+      path: req.path,
+      method: req.method
+    }
   });
   res.json({ message: 'Hello from Cloud Run!' });
 });
@@ -17,25 +18,32 @@ app.get('/', (req: Request, res: Response) => {
 app.get('/health', (req: Request, res: Response) => {
   logger.info('Health check requested', {
     status: 'OK',
-    timestamp: new Date().toISOString(),
+    httpRequest: {
+      path: req.path,
+      method: req.method
+    }
   });
   res.json({ status: 'OK' });
 });
 
 // エラーテスト用エンドポイント
 app.get('/error', (req: Request, res: Response) => {
-  logger.warning('Attempting to trigger a test error', {
-    path: req.path,
-    method: req.method,
+  logger.warn('Attempting to trigger a test error', {
+    httpRequest: {
+      path: req.path,
+      method: req.method
+    }
   });
 
   generateTestError();
 });
 
 app.get('/error2', (req: Request, res: Response) => {
-  logger.warning('Attempting to trigger a test error', {
-    path: req.path,
-    method: req.method,
+  logger.warn('Attempting to trigger a test error', {
+    httpRequest: {
+      path: req.path,
+      method: req.method
+    }
   });
 
   generateTestError2();
