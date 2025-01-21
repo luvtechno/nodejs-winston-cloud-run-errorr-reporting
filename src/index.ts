@@ -35,6 +35,7 @@ app.get('/error', (req: Request, res: Response) => {
 // エラーハンドリングの例
 app.use((err: Error, req: Request, res: Response, next: any) => {
   logger.error(err.stack || 'No stack trace available', {
+    stack_trace: err.stack || 'No stack trace available',
     error: err.message,
     path: req.path,
     method: req.method,
