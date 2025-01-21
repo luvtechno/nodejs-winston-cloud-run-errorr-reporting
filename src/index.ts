@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { logger } from './logger';
+import { generateTestError } from './error-generator';
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -28,8 +29,7 @@ app.get('/error', (req: Request, res: Response) => {
     method: req.method,
   });
 
-  // 意図的にエラーを発生させる
-  throw new Error('This is a test error for Error Reporting');
+  generateTestError();
 });
 
 // エラーハンドリングの例
