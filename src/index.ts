@@ -21,6 +21,17 @@ app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'OK' });
 });
 
+// エラーテスト用エンドポイント
+app.get('/error', (req: Request, res: Response) => {
+  logger.warning('Attempting to trigger a test error', {
+    path: req.path,
+    method: req.method,
+  });
+
+  // 意図的にエラーを発生させる
+  throw new Error('This is a test error for Error Reporting');
+});
+
 // エラーハンドリングの例
 app.use((err: Error, req: Request, res: Response, next: any) => {
   logger.error('An error occurred', {
