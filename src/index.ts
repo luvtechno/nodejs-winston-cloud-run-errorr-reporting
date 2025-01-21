@@ -47,7 +47,7 @@ app.use((err: Error, req: Request, res: Response, next: any) => {
       },
       user: req.get('x-user-id') || 'anonymous',
       reportLocation: {
-        filePath: err.stack ? err.stack.split('\n')[1].match(/(.*?):\d+/)?.[1] || __filename : __filename,
+        filePath: err.stack ? err.stack.split('\n')[1].match(/(.*?):\d+/)?.[1] || 'unknown' : 'unknown',
         lineNumber: err.stack ? parseInt(err.stack.split('\n')[1].match(/\d+/)?.[0] || '0') : 0,
         functionName: err.stack ? (err.stack.split('\n')[1].match(/at\s+([^\s]+)/)?.[1] || 'unknown') : 'unknown'
       }
