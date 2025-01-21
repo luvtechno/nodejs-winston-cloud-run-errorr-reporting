@@ -34,11 +34,24 @@ app.get('/error', (req: Request, res: Response) => {
 
 // エラーハンドリングの例
 app.use((err: Error, req: Request, res: Response, next: any) => {
-  logger.error(err.stack || 'No stack trace available', {
+  logger.error(err.message, {
     stack_trace: err.stack || 'No stack trace available',
-    error: err.message,
-    path: req.path,
-    method: req.method,
+    context: {
+      httpRequest: {
+        method: req.method,
+        url: req.url,
+        userAgent: req.get('user-agent') || '',
+        referrer: req.get('referrer') || '',
+        responseStatusCode: 500,
+        remoteIp: req.ip
+      },
+      user: req.get('x-user-id') || 'anonymous',
+      reportLocation: {
+        filePath: __filename,
+        lineNumber: err.stack ? parseInt(err.stack.split('\n')[1].match(/\d+/)?.[0] || '0') : 0,
+        functionName: err.stack ? (err.stack.split('\n')[1].match(/at\s+([^\s]+)/)?.[1] || 'unknown') : 'unknown'
+      }
+    }
   });
   res.status(500).json({ error: 'Internal Server Error' });
 });
