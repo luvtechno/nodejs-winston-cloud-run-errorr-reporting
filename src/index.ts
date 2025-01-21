@@ -32,6 +32,15 @@ app.get('/error', (req: Request, res: Response) => {
   generateTestError();
 });
 
+app.get('/error2', (req: Request, res: Response) => {
+  logger.warning('Attempting to trigger a test error', {
+    path: req.path,
+    method: req.method,
+  });
+
+  generateTestError();
+});
+
 // エラーハンドリングの例
 app.use((err: Error, req: Request, res: Response, next: any) => {
   logger.error(err.message, {
