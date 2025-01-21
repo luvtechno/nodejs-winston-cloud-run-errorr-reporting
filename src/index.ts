@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { logger } from './logger';
-import { generateTestError } from './error-generator';
+import { generateTestError, generateTestError2 } from './error-generator';
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -38,7 +38,7 @@ app.get('/error2', (req: Request, res: Response) => {
     method: req.method,
   });
 
-  generateTestError();
+  generateTestError2();
 });
 
 // エラーハンドリングの例
