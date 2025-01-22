@@ -55,7 +55,7 @@ app.use((err: Error, req: Request, res: Response, next: any) => {
   const message = `[${req.method} ${req.url}] ${err.message} ${filePath}`;
 
   const originalStackTrace = err.stack || 'No stack trace available';
-  const stackTrace = `${message}\n${originalStackTrace}`;
+  const stackTrace = `${err.name}: ${message}\n${originalStackTrace}`;
 
   logger.error(message, {
     stack_trace: stackTrace,
