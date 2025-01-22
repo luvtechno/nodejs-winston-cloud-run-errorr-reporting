@@ -54,7 +54,7 @@ app.use((err: Error, req: Request, res: Response, next: any) => {
   const filePath = err.stack ? err.stack.split('\n')[1].match(/(.*?):\d+/)?.[1] || 'unknown' : 'unknown';
   const message = `[${req.method} ${req.url}] ${err.message} ${filePath}`;
 
-  const originalStackTrace = err.stack || 'No stack trace available';
+  const originalStackTrace = (err.stack || 'No stack trace available').split('\n').slice(1).join('\n');
   const stackTrace = `${err.name}: ${message}\n${originalStackTrace}`;
 
   logger.error(message, {
