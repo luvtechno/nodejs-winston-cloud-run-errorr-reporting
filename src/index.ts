@@ -51,13 +51,14 @@ app.get('/error2', (req: Request, res: Response) => {
 
 // エラーハンドリングの例
 app.use((err: Error, req: Request, res: Response, next: any) => {
-  const copiedErr = structuredClone(err);
-  const filePath = copiedErr.stack ? copiedErr.stack.split('\n')[1].match(/(.*?):\d+/)?.[1] || 'unknown' : 'unknown';
-  const message = `*[${req.method} ${req.url}]* ${copiedErr.message}\n${filePath}`;
+  const filePath = err.stack ? err.stack.split('\n')[1].match(/(.*?):\d+/)?.[1] || 'unknown' : 'unknown';
+  const message = `[${req.method} ${req.url}] ${err.message} ${filePath}`;
 
-  err.message = message;
+  const originalStackTrace = err.stack || 'No stack trace available';
+  const stackTrace = `${message}\n${originalStackTrace}`;
+
   logger.error(message, {
-    stack_trace: err.stack || 'No stack trace available',
+    stack_trace: stackTrace,
     context: {
       httpRequest: {
         method: req.method,
