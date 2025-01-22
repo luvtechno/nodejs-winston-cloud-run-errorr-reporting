@@ -51,7 +51,8 @@ app.get('/error2', (req: Request, res: Response) => {
 
 // エラーハンドリングの例
 app.use((err: Error, req: Request, res: Response, next: any) => {
-  const filePath = err.stack ? err.stack.split('\n')[1].match(/(.*?):\d+/)?.[1] || 'unknown' : 'unknown';
+  const stackTraceFirstline = err.stack ? err.stack.split('\n')[1].match(/(.*?):\d+/)?.[1] || '' : ''; // e.g. "     at generateTestError (/app/dist/error-generator.js"
+  const filePath = `${stackTraceFirstline.trimStart()})`; // e.g. "at generateTestError (/app/dist/error-generator.js)"
   const message = `[${req.method} ${req.url}] ${err.message} ${filePath}`;
 
   const originalStackTrace = (err.stack || 'No stack trace available').split('\n').slice(1).join('\n');
