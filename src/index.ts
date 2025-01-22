@@ -51,7 +51,8 @@ app.get('/error2', (req: Request, res: Response) => {
 
 // エラーハンドリングの例
 app.use((err: Error, req: Request, res: Response, next: any) => {
-  const message = `*[${req.method} ${req.url}]* ${err.message}`;
+  const filePath = err.stack ? err.stack.split('\n')[1].match(/(.*?):\d+/)?.[1] || 'unknown' : 'unknown';
+  const message = `*[${req.method} ${req.url}]* ${err.message}\n${filePath}`;
   err.message = message;
   logger.error(message, {
     stack_trace: err.stack || 'No stack trace available',
@@ -66,7 +67,7 @@ app.use((err: Error, req: Request, res: Response, next: any) => {
       },
       user: req.get('x-user-id') || 'anonymous',
       reportLocation: {
-        filePath: err.stack ? err.stack.split('\n')[1].match(/(.*?):\d+/)?.[1] || 'unknown' : 'unknown',
+        filePath: filePath,
         lineNumber: err.stack ? parseInt(err.stack.split('\n')[1].match(/\d+/)?.[0] || '0') : 0,
         functionName: err.stack ? (err.stack.split('\n')[1].match(/at\s+([^\s]+)/)?.[1] || 'unknown') : 'unknown'
       }
